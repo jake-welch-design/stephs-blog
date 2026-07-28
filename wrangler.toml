@@ -1,3 +1,7 @@
 name = "stephs-blog"
 compatibility_date = "2026-07-28"
 pages_build_output_dir = "."
+
+[vars]
+ARENA_POSTS_SLUG = "steph-s-blog-posts"
+ARENA_ANSWERS_SLUG = "steph-s-blog-answers"
