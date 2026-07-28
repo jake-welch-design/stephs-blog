@@ -14,7 +14,11 @@ export async function onRequestGet(context) {
   );
 
   if (!res.ok) {
-    return json({ error: "Failed to load posts from Are.na" }, 502);
+    const detail = await res.text();
+    return json(
+      { error: "Failed to load posts from Are.na", status: res.status, detail },
+      502
+    );
   }
 
   const data = await res.json();
