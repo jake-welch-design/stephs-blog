@@ -24,17 +24,17 @@ export async function onRequestPost(context) {
 
   const content = question ? `Q: ${question}\nA: ${answer}` : answer;
 
-  const res = await fetch(
-    `https://api.are.na/v2/channels/${env.ARENA_ANSWERS_SLUG}/blocks`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${env.ARENA_TOKEN}`,
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({ content }),
-    }
-  );
+  const res = await fetch("https://api.are.na/v3/blocks", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${env.ARENA_TOKEN}`,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      value: content,
+      channel_ids: [env.ARENA_ANSWERS_SLUG],
+    }),
+  });
 
   if (!res.ok) {
     return json({ error: "Failed to save answer to Are.na" }, 502);

@@ -9,31 +9,26 @@ export async function onRequestGet(context) {
   }
 
   const res = await fetch(
-    `https://api.are.na/v2/channels/${env.ARENA_POSTS_SLUG}?per=100`,
+    `https://api.are.na/v3/channels/${env.ARENA_POSTS_SLUG}/contents?per=100&sort=position_desc`,
     { headers: { Authorization: `Bearer ${env.ARENA_TOKEN}` } }
   );
 
   if (!res.ok) {
-    const detail = await res.text();
-    return json(
-      { error: "Failed to load posts from Are.na", status: res.status, detail },
-      502
-    );
+    return json({ error: "Failed to load posts from Are.na" }, 502);
   }
 
   const data = await res.json();
-  const blocks = (data.contents || [])
-    .filter((block) => block.class === "Text" && block.content)
-    .reverse(); // newest first
+  const blocks = (data.data || []).filter(
+    (block) => block.type === "Text" && block.content?.markdown
+  ); // already newest-first via sort=position_desc
 
   const posts = blocks.map((block) => {
-    const lines = block.content.replace(/\r\n/g, "\n").split("\n");
+    const raw = block.content.markdown;
+    const lines = raw.replace(/\r\n/g, "\n").split("\n");
     const splitAt = lines.findIndex((line) => line.trim() === "*");
 
     const post =
-      splitAt === -1
-        ? block.content.trim()
-        : lines.slice(0, splitAt).join("\n").trim();
+      splitAt === -1 ? raw.trim() : lines.slice(0, splitAt).join("\n").trim();
     const question =
       splitAt === -1 ? null : lines.slice(splitAt + 1).join("\n").trim();
 
