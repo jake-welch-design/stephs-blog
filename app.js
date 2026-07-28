@@ -44,7 +44,7 @@ function renderPost(entry) {
     <form>
       <textarea required placeholder="Your answer"></textarea>
       <br />
-      <button type="submit">Answer to read</button>
+      <button type="submit">Enter</button>
       <p class="error" hidden></p>
     </form>
   `;
