@@ -16,7 +16,8 @@ export async function onRequestPost(context) {
   }
 
   const answer = typeof body.answer === "string" ? body.answer.trim() : "";
-  const question = typeof body.question === "string" ? body.question.trim() : "";
+  const question =
+    typeof body.question === "string" ? body.question.trim() : "";
 
   if (!answer) {
     return json({ error: "Answer is required" }, 400);
